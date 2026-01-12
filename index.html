@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroBus</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="video-bg">
+        <video autoplay muted loop playsinline>
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-night-traffic-in-a-city-4366-large.mp4" type="video/mp4">
+        </video>
+        <div class="overlay-gradient"></div>
+    </div>
+
+    <div id="global-loader" class="loader-overlay hidden">
+        <div class="loader-content">
+            <div class="bus-anim"><i class="fa-solid fa-bus-simple"></i></div>
+            <div class="loading-bar"><div class="progress"></div></div>
+            <h3 id="loader-text">Searching Buses...</h3>
+        </div>
+    </div>
+
+    <div class="app-container">
+        
+        <nav class="glass-nav">
+            <div class="logo">Aero<span class="highlight">Bus</span></div>
+            <div class="nav-links">
+                <a href="#" class="active">Bus Tickets</a>
+                <a href="#">Hotels</a>
+                <a href="#">Rentals</a>
+            </div>
+            <div class="user-profile">
+                <span>Login / Register</span>
+                <i class="fa-regular fa-user-circle"></i>
+            </div>
+        </nav>
+
+        <section id="hero-view" class="view active-view">
+            <div class="hero-content fade-up">
+                <h1>Book Your Journey</h1>
+                
+                <form id="search-form" class="glass-panel search-widget">
+                    <div class="input-group">
+                        <i class="fa-solid fa-location-dot icon-left"></i>
+                        <input type="text" placeholder="From Station" value="Bangalore" required>
+                    </div>
+                    
+                    <button type="button" class="swap-btn"><i class="fa-solid fa-arrow-right-arrow-left"></i></button>
+                    
+                    <div class="input-group">
+                        <i class="fa-solid fa-map-location-dot icon-left"></i>
+                        <input type="text" placeholder="To Station" value="Hyderabad" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <i class="fa-regular fa-calendar icon-left"></i>
+                        <input type="date" required>
+                    </div>
+                    
+                    <button type="submit" class="cta-btn search-btn">Search</button>
+                </form>
+
+                <div class="offers-section">
+                    <h3>Trending Offers</h3>
+                    <div class="offers-grid">
+                        <div class="offer-card">
+                            <div class="code">AERO500</div>
+                            <p>Save up to ₹500 on first trip</p>
+                        </div>
+                        <div class="offer-card">
+                            <div class="code">RETURN100</div>
+                            <p>₹100 Cashback on Return</p>
+                        </div>
+                        <div class="offer-card">
+                            <div class="code">EARLYBIRD</div>
+                            <p>10% Off on advance booking</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="results-view" class="view hidden">
+            <div class="results-layout">
+                
+                <aside class="sidebar glass-panel">
+                    <h3>Filters</h3>
+                    <div class="filter-group">
+                        <h4>Bus Type</h4>
+                        <label class="checkbox-container">
+                            <input type="checkbox" checked onchange="app.filterBuses('AC')"> AC
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container">
+                            <input type="checkbox" checked onchange="app.filterBuses('Non-AC')"> Non-AC
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <div class="filter-group">
+                        <h4>Seat Type</h4>
+                        <label class="checkbox-container">
+                            <input type="checkbox" checked onchange="app.filterBuses('Sleeper')"> Sleeper
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="checkbox-container">
+                            <input type="checkbox" checked onchange="app.filterBuses('Seater')"> Seater
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <div class="filter-group">
+                        <h4>Price Range</h4>
+                        <input type="range" min="500" max="3000" class="slider">
+                    </div>
+                </aside>
+
+                <div class="main-content">
+                    <div class="results-header glass-panel">
+                        <button class="back-btn" onclick="app.goBack()"><i class="fa-solid fa-arrow-left"></i></button>
+                        <div class="header-info">
+                            <h2>Bangalore <i class="fa-solid fa-arrow-right"></i> Hyderabad</h2>
+                            <span><span id="bus-count">0</span> Buses found</span>
+                        </div>
+                        <div class="sort-options">
+                            <span>Sort by:</span>
+                            <button class="active">Price</button>
+                            <button>Duration</button>
+                            <button>Rating</button>
+                        </div>
+                    </div>
+
+                    <div id="bus-list-container" class="bus-list">
+                        </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="success-view" class="view hidden">
+            <div class="success-card glass-panel fade-up">
+                <div class="check-anim">
+                    <svg viewBox="0 0 52 52"><circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
+                </div>
+                <h2>Booking Confirmed!</h2>
+                <div class="ticket-details">
+                    <div class="ticket-row"><span>Ticket ID:</span> <span id="ticket-id" class="highlight"></span></div>
+                    <div class="ticket-row"><span>PNR:</span> <span class="highlight">8892-221</span></div>
+                </div>
+                <button class="cta-btn secondary" onclick="location.reload()">Book Return</button>
+            </div>
+        </section>
+
+    </div>
+
+    <div id="seat-modal" class="modal-overlay">
+        <div class="modal-drawer">
+            <div class="modal-header">
+                <h3>Select Seats</h3>
+                <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="seat-info-legend">
+                <span><div class="dot available"></div> Available</span>
+                <span><div class="dot booked"></div> Booked</span>
+                <span><div class="dot ladies"></div> Ladies</span>
+                <span><div class="dot selected"></div> Selected</span>
+            </div>
+
+            <div class="bus-layout-container">
+                <div class="deck-label">Lower Deck</div>
+                <div class="seats-grid" id="seats-grid">
+                    </div>
+            </div>
+
+            <div class="modal-footer glass-panel">
+                <div class="selected-seats-info">
+                    <span id="selected-seat-nums">No seats selected</span>
+                </div>
+                <div class="footer-action">
+                    <div class="price-summary">
+                        <small>Total Amount</small>
+                        <h3 id="total-price">₹0</h3>
+                    </div>
+                    <button id="pay-btn" class="cta-btn" disabled>Proceed to Pay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
