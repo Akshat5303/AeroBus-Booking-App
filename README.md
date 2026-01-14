@@ -22,4 +22,5 @@ This project simulates the complete flow of a travel app, from searching for rou
 * **JavaScript (Vanilla):** DOM manipulation, object-based state management, and event handling (no external frameworks used).
 * **Assets:** FontAwesome Icons, Google Fonts (Outfit), Mixkit (Video).
 
-# created by: Happy Coders Team
+# created by:
+* Happy Coders Team
